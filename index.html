@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Engineering Documentation Suite 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a4d7a;
+            --primary-dark: #0f3558;
+            --secondary: #2c7fb8;
+            --accent: #e67e22;
+            --success: #27ae60;
+            --danger: #c0392b;
+            --warning: #f39c12;
+            --bg-main: #f5f7fa;
+            --bg-card: #ffffff;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --border: #e1e8ed;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            margin: 1%;
+            padding-bottom: 80px;
+            line-height: 1.5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 12px 1%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px var(--shadow);
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .header h1 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: 10px;
+            opacity: 0.9;
+        }
+
+        .search-bar {
+            margin: 8px 1%;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 12px 10px 36px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            background: white;
+            transition: all 0.3s;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 77, 122, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .category-tabs {
+            display: flex;
+            overflow-x: auto;
+            gap: 8px;
+            padding: 8px 1%;
+            margin-bottom: 8px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .category-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab {
+            flex-shrink: 0;
+            padding: 8px 14px;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 10px;
+            padding: 0 1%;
+            margin-bottom: 12px;
+        }
+
+        .module-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 14px;
+            box-shadow: 0 2px 6px var(--shadow);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .module-card:active {
+            transform: scale(0.98);
+            border-color: var(--primary);
+        }
+
+        .module-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .module-title {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .module-desc {
+            font-size: 10px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .module-badge {
+            display: inline-block;
+            font-size: 8px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-top: 6px;
+            font-weight: 600;
+        }
+
+        .badge-technical { background: #e3f2fd; color: #1976d2; }
+        .badge-study { background: #f3e5f5; color: #7b1fa2; }
+        .badge-procurement { background: #e8f5e9; color: #388e3c; }
+        .badge-safety { background: #fff3e0; color: #f57c00; }
+        .badge-execution { background: #fce4ec; color: #c2185b; }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s;
+            padding: 1%;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 16px 1%;
+            border-bottom: 1px solid var(--border);
+            z-index: 10;
+        }
+
+        .modal-handle {
+            width: 40px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin: 0 auto 12px;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .modal-subtitle {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 1%;
+            background: var(--bg-main);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--text-secondary);
+        }
+
+        .modal-body {
+            padding: 16px 1%;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+        }
+
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 77, 122, 0.1);
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:active {
+            background: var(--primary-dark);
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: var(--bg-main);
+            color: var(--text-primary);
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin: 16px 1% 8px;
+            color: var(--text-primary);
+        }
+
+        .info-card {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 11px;
+            border-bottom: 1px solid var(--bg-main);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .info-value {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 1%;
+            box-shadow: 0 -2px 8px var(--shadow);
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 6px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .nav-item:active {
+            background: var(--bg-main);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-label {
+            font-size: 9px;
+            font-weight: 500;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+            padding: 8px 1%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .quick-actions::-webkit-scrollbar {
+            display: none;
+        }
+
+        .quick-action {
+            flex-shrink: 0;
+            background: white;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 500;
+            box-shadow: 0 2px 4px var(--shadow);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            padding: 0 1%;
+            margin-bottom: 12px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px var(--shadow);
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .calculation-output {
+            background: var(--bg-main);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+        }
+
+        .output-section {
+            margin-bottom: 12px;
+        }
+
+        .output-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+
+        .output-result {
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🏗️ Engineering Documentation Suite 2026</h1>
+        <p>Complete Project Lifecycle Support | I&C | Process | FEED | Construction</p>
+    </div>
+
+    <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search documentation, procedures, calculations...">
+    </div>
+
+    <div class="category-tabs">
+        <div class="tab active" data-category="all">All Modules</div>
+        <div class="tab" data-category="technical">Technical Docs</div>
+        <div class="tab" data-category="study">Studies & Design</div>
+        <div class="tab" data-category="procurement">Procurement</div>
+        <div class="tab" data-category="safety">Safety & Risk</div>
+        <div class="tab" data-category="execution">Execution</div>
+    </div>
+
+    <div class="quick-actions">
+        <div class="quick-action" onclick="openQuickCalc()">⚡ Quick Calc</div>
+        <div class="quick-action" onclick="openNewProject()">📁 New Project</div>
+        <div class="quick-action" onclick="openTemplates()">📋 Templates</div>
+        <div class="quick-action" onclick="openRecentDocs()">🕒 Recent</div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-value">24</div>
+            <div class="stat-label">Active Modules</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">156</div>
+            <div class="stat-label">Templates Available</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">42</div>
+            <div class="stat-label">Procedures Library</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">18</div>
+            <div class="stat-label">Calculation Tools</div>
+        </div>
+    </div>
+
+    <div class="section-title">📚 Engineering Documentation Modules</div>
+    
+    <div class="modules-grid" id="modulesGrid">
+        <!-- Technical Documentation -->
+        <div class="module-card" data-category="technical" onclick="openModule('datasheet')">
+            <div class="module-icon">📊</div>
+            <div class="module-title">Instrument Datasheets</div>
+            <div class="module-desc">Pressure, temp, flow, level, analyzers, control valves</div>
+            <span class="module-badge badge-technical">TECHNICAL</span>
+        </div>
+
+        <div class="module-card" data-category="technical" onclick="openModule('iolist')">
+            <div class="module-icon">🔌</div>
+            <div class="module-title">Control System I/O Lists</div>
+            <div class="module-desc">DCS/PLC input/output documentation</div>
+            <span class="module-badge badge-technical">TECHNICAL</span>
+        </div>
+
+        <div class="module-card" data-category="technical" onclick="openModule('index')">
+            <div class="module-icon">📑</div>
+            <div class="module-title">Instrument Index</div>
+            <div class="module-desc">Complete instrument register & tracking</div>
+            <span class="module-badge badge-technical">TECHNICAL</span>
+        </div>
+
+        <div class="module-card" data-category="technical" onclick="openModule('loop')">
+            <div class="module-icon">🔄</div>
+            <div class="module-title">Loop Diagrams</div>
+            <div class="module-desc">Control loop schematics & wiring</div>
+            <span class="module-badge badge-technical">TECHNICAL</span>
+        </div>
+
+        <div class="module-card" data-category="technical" onclick="openModule('hookup')">
+            <div class="module-icon">🔧</div>
+            <div class="module-title">Hook-up Drawings</div>
+            <div class="module-desc">Installation & connection details</div>
+            <span class="module-badge badge-technical">TECHNICAL</span>
+        </div>
+
+        <div class="module-card" data-category="technical" onclick="openModule('causeeffect')">
+            <div class="module-icon">⚙️</div>
+            <div class="module-title">Cause & Effect Matrix</div>
+            <div class="module-desc">Interlock & shutdown logic</div>
+            <span class="module-badge badge-technical">TECHNICAL</span>
+        </div>
+
+        <div class="module-card" data-category="technical" onclick="openModule('narrative')">
+            <div class="module-icon">📝</div>
+            <div class="module-title">Control Narratives</div>
+            <div class="module-desc">Functional descriptions & sequences</div>
+            <span class="module-badge badge-technical">TECHNICAL</span>
+        </div>
+
+        <div class="module-card" data-category="technical" onclick="openModule('alarm')">
+            <div class="module-icon">🚨</div>
+            <div class="module-title">Alarm & Trip Schedule</div>
+            <div class="module-desc">Alarm management & priority</div>
+            <span class="module-badge badge-technical">TECHNICAL</span>
+        </div>
+
+        <div class="module-card" data-category="technical" onclick="openModule('pid')">
+            <div class="module-icon">🗺️</div>
+            <div class="module-title">P&ID Development</div>
+            <div class="module-desc">Piping & instrumentation diagrams</div>
+            <span class="module-badge badge-technical">TECHNICAL</span>
+        </div>
+
+        <!-- Study & Design Phase -->
+        <div class="module-card" data-category="study" onclick="openModule('dbm')">
+            <div class="module-icon">📐</div>
+            <div class="module-title">Design Basis Memo</div>
+            <div class="module-desc">DBM development & assumptions</div>
+            <span class="module-badge badge-study">STUDY</span>
+        </div>
+
+        <div class="module-card" data-category="study" onclick="openModule('philosophy')">
+            <div class="module-icon">💡</div>
+            <div class="module-title">Design Philosophy</div>
+            <div class="module-desc">Control, alarm, SIS philosophies</div>
+            <span class="module-badge badge-study">STUDY</span>
+        </div>
+
+        <div class="module-card" data-category="study" onclick="openModule('feed')">
+            <div class="module-icon">🎯</div>
+            <div class="module-title">FEED Studies</div>
+            <div class="module-desc">Front-end engineering design support</div>
+            <span class="module-badge badge-study">STUDY</span>
+        </div>
+
+        <div class="module-card" data-category="study" onclick="openModule('sow')">
+            <div class="module-icon">📄</div>
+            <div class="module-title">Scope of Work</div>
+            <div class="module-desc">SOW documents & specifications</div>
+            <span class="module-badge badge-study">STUDY</span>
+        </div>
+
+        <!-- Safety & Risk -->
+        <div class="module-card" data-category="safety" onclick="openModule('hazop')">
+            <div class="module-icon">⚠️</div>
+            <div class="module-title">HAZOP Studies</div>
+            <div class="module-desc">Node tables, deviations, actions</div>
+            <span class="module-badge badge-safety">SAFETY</span>
+        </div>
+
+        <div class="module-card" data-category="safety" onclick="openModule('sil')">
+            <div class="module-icon">🛡️</div>
+            <div class="module-title">SIL/SIS Documentation</div>
+            <div class="module-desc">Safety instrumented systems</div>
+            <span class="module-badge badge-safety">SAFETY</span>
+        </div>
+
+        <!-- Procurement -->
+        <div class="module-card" data-category="procurement" onclick="openModule('mto')">
+            <div class="module-icon">📦</div>
+            <div class="module-title">Material Take-Off</div>
+            <div class="module-desc">MTO generation & tracking</div>
+            <span class="module-badge badge-procurement">PROCUREMENT</span>
+        </div>
+
+        <div class="module-card" data-category="procurement" onclick="openModule('rfq')">
+            <div class="module-icon">💰</div>
+            <div class="module-title">RFQ Documents</div>
+            <div class="module-desc">Request for quotation preparation</div>
+            <span class="module-badge badge-procurement">PROCUREMENT</span>
+        </div>
+
+        <div class="module-card" data-category="procurement" onclick="openModule('tbe')">
+            <div class="module-icon">✅</div>
+            <div class="module-title">Tech Bid Evaluation</div>
+            <div class="module-desc">TBE templates & scoring</div>
+            <span class="module-badge badge-procurement">PROCUREMENT</span>
+        </div>
+
+        <div class="module-card" data-category="procurement" onclick="openModule('vdr')">
+            <div class="module-icon">🔍</div>
+            <div class="module-title">Vendor Doc Review</div>
+            <div class="module-desc">Document review checklists</div>
+            <span class="module-badge badge-procurement">PROCUREMENT</span>
+        </div>
+
+        <div class="module-card" data-category="procurement" onclick="openModule('estimate')">
+            <div class="module-icon">💵</div>
+            <div class="module-title">Cost Estimates</div>
+            <div class="module-desc">Instrumentation cost estimation</div>
+            <span class="module-badge badge-procurement">PROCUREMENT</span>
+        </div>
+
+        <!-- Execution Phase -->
+        <div class="module-card" data-category="execution" onclick="openModule('cwp')">
+            <div class="module-icon">🏗️</div>
+            <div class="module-title">Construction Packages</div>
+            <div class="module-desc">Work package development</div>
+            <span class="module-badge badge-execution">EXECUTION</span>
+        </div>
+
+        <div class="module-card" data-category="execution" onclick="openModule('bid')">
+            <div class="module-icon">📋</div>
+            <div class="module-title">Bid Packages</div>
+            <div class="module-desc">Construction bid documentation</div>
+            <span class="module-badge badge-execution">EXECUTION</span>
+        </div>
+
+        <div class="module-card" data-category="execution" onclick="openModule('procedures')">
+            <div class="module-icon">📖</div>
+            <div class="module-title">Engineering Procedures</div>
+            <div class="module-desc">Calibration, testing, commissioning</div>
+            <span class="module-badge badge-execution">EXECUTION</span>
+        </div>
+
+        <!-- Calculations -->
+        <div class="module-card" data-category="technical" onclick="openModule('calculations')">
+            <div class="module-icon">🧮</div>
+            <div class="module-title">Engineering Calculations</div>
+            <div class="module-desc">Valve sizing, flow, transmitter ranging</div>
+            <span class="module-badge badge-technical">CALCULATIONS</span>
+        </div>
+    </div>
+
+    <!-- Modal Template -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Module Title</div>
+                <div class="modal-subtitle" id="modalSubtitle">Module Description</div>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item active">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label">Home</div>
+        </div>
+        <div class="nav-item">
+            <div class="nav-icon">📁</div>
+            <div class="nav-label">Projects</div>
+        </div>
+        <div class="nav-item">
+            <div class="nav-icon">🧮</div>
+            <div class="nav-label">Calc</div>
+        </div>
+        <div class="nav-item">
+            <div class="nav-icon">📚</div>
+            <div class="nav-label">Library</div>
+        </div>
+        <div class="nav-item">
+            <div class="nav-icon">⚙️</div>
+            <div class="nav-label">Settings</div>
+        </div>
+    </div>
+
+    <script>
+        // Module Templates and Data
+        const moduleTemplates = {
+            datasheet: {
+                title: 'Instrument Datasheet Generator',
+                subtitle: 'Create comprehensive instrument datasheets',
+                content: `
+                    <div class="form-group">
+                        <label class="form-label">Instrument Type</label>
+                        <select class="form-select" id="instrType">
+                            <option>Pressure Transmitter</option>
+                            <option>Temperature Transmitter</option>
+                            <option>Flow Transmitter</option>
+                            <option>Level Transmitter</option>
+                            <option>Control Valve</option>
+                            <option>Analyzer</option>
+                            <option>Relief Valve</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tag Number</label>
+                        <input class="form-input" type="text" placeholder="e.g., PT-101">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Service Description</label>
+                        <input class="form-input" type="text" placeholder="e.g., Feed pump discharge pressure">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Process Fluid</label>
+                        <input class="form-input" type="text" placeholder="e.g., Crude oil">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Operating Range</label>
+                        <input class="form-input" type="text" placeholder="e.g., 0-100 bar">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Process Connection</label>
+                        <select class="form-select">
+                            <option>1/2" NPT</option>
+                            <option>1/2" FNPT</option>
+                            <option>1/4" NPT</option>
+                            <option>Flanged</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Output Signal</label>
+                        <select class="form-select">
+                            <option>4-20mA HART</option>
+                            <option>Foundation Fieldbus</option>
+                            <option>Profibus PA</option>
+                            <option>Wireless</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Area Classification</label>
+                        <select class="form-select">
+                            <option>Class I, Div 1</option>
+                            <option>Class I, Div 2</option>
+                            <option>Zone 1</option>
+                            <option>Zone 2</option>
+                            <option>Non-hazardous</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="generateDatasheet()">📊 Generate Datasheet</button>
+                    <button class="btn btn-secondary" onclick="exportPDF()">📄 Export PDF</button>
+                `
+            },
+            calculations: {
+                title: 'Engineering Calculations',
+                subtitle: 'Standards-based calculation tools',
+                content: `
+                    <div class="form-group">
+                        <label class="form-label">Calculation Type</label>
+                        <select class="form-select" id="calcType" onchange="updateCalcForm()">
+                            <option>Control Valve Sizing (IEC 60534)</option>
+                            <option>Orifice Plate Sizing (ISO 5167)</option>
+                            <option>Transmitter Range Setting</option>
+                            <option>Impulse Line Sizing</option>
+                            <option>Relief Valve I&C Interface</option>
+                        </select>
+                    </div>
+                    <div id="calcInputs">
+                        <div class="form-group">
+                            <label class="form-label">Flow Rate (m³/h)</label>
+                            <input class="form-input" type="number" id="flowRate" value="100">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Inlet Pressure (bar)</label>
+                            <input class="form-input" type="number" id="p1" value="10">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Outlet Pressure (bar)</label>
+                            <input class="form-input" type="number" id="p2" value="5">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Fluid Density (kg/m³)</label>
+                            <input class="form-input" type="number" id="density" value="1000">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Viscosity (cP)</label>
+                            <input class="form-input" type="number" id="viscosity" value="1">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="performCalculation()">🧮 Calculate</button>
+                    <div class="calculation-output" id="calcOutput" style="display:none;"></div>
+                `
+            },
+            hazop: {
+                title: 'HAZOP Study Preparation',
+                subtitle: 'Hazard & Operability analysis framework',
+                content: `
+                    <div class="form-group">
+                        <label class="form-label">Study Node</label>
+                        <input class="form-input" type="text" placeholder="e.g., Reactor Feed Section">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Design Intent</label>
+                        <textarea class="form-textarea" placeholder="Describe normal operation of this node..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Guide Word</label>
+                        <select class="form-select">
+                            <option>NO / NOT</option>
+                            <option>MORE</option>
+                            <option>LESS</option>
+                            <option>AS WELL AS</option>
+                            <option>PART OF</option>
+                            <option>REVERSE</option>
+                            <option>OTHER THAN</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Parameter</label>
+                        <select class="form-select">
+                            <option>Flow</option>
+                            <option>Pressure</option>
+                            <option>Temperature</option>
+                            <option>Level</option>
+                            <option>Composition</option>
+                            <option>Phase</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Deviation</label>
+                        <input class="form-input" type="text" placeholder="e.g., No flow in feed line">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Possible Causes</label>
+                        <textarea class="form-textarea" placeholder="List potential causes..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Consequences</label>
+                        <textarea class="form-textarea" placeholder="Describe potential impacts..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Existing Safeguards</label>
+                        <textarea class="form-textarea" placeholder="List current protections..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Recommendations</label>
+                        <textarea class="form-textarea" placeholder="Actions required..."></textarea>
+                    </div>
+                    <button class="btn btn-primary">💾 Save HAZOP Record</button>
+                    <button class="btn btn-secondary">📊 Generate Node Table</button>
+                `
+            },
+            feed: {
+                title: 'FEED Study Support',
+                subtitle: 'Front-End Engineering Design documentation',
+                content: `
+                    <div class="info-card">
+                        <div class="info-row">
+                            <span class="info-label">Project Phase</span>
+                            <span class="info-value">FEED</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Deliverable Type</span>
+                            <span class="info-value">Study & Design</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Study Scope</label>
+                        <select class="form-select">
+                            <option>Instrumentation & Control Philosophy</option>
+                            <option>Control System Architecture</option>
+                            <option>Safety System Conceptual Design</option>
+                            <option>Instrument Count & Budget</option>
+                            <option>Communication Systems</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Design Criteria</label>
+                        <textarea class="form-textarea" placeholder="Key design requirements and constraints..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Technology Selection</label>
+                        <textarea class="form-textarea" placeholder="Recommended systems and vendors..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Estimate Accuracy</label>
+                        <select class="form-select">
+                            <option>Class 4 (-30% / +50%)</option>
+                            <option>Class 3 (-20% / +30%)</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary">📐 Generate FEED Package</button>
+                `
+            },
+            rfq: {
+                title: 'Request for Quotation',
+                subtitle: 'Procurement documentation preparation',
+                content: `
+                    <div class="form-group">
+                        <label class="form-label">Equipment Category</label>
+                        <select class="form-select">
+                            <option>DCS/PLC System</option>
+                            <option>Safety Instrumented System</option>
+                            <option>Field Instrumentation</option>
+                            <option>Control Valves</option>
+                            <option>Analyzers</option>
+                            <option>Electrical Systems</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">RFQ Number</label>
+                        <input class="form-input" type="text" placeholder="e.g., RFQ-2026-IC-001">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Technical Requirements</label>
+                        <textarea class="form-textarea" placeholder="Detailed specifications..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Standards & Codes</label>
+                        <textarea class="form-textarea" placeholder="IEC, ISA, ANSI, API, etc..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Bid Submission Deadline</label>
+                        <input class="form-input" type="date">
+                    </div>
+                    <button class="btn btn-primary">💰 Generate RFQ Package</button>
+                `
+            },
+            procedures: {
+                title: 'Engineering Procedures',
+                subtitle: 'Calibration, testing, and commissioning',
+                content: `
+                    <div class="form-group">
+                        <label class="form-label">Procedure Type</label>
+                        <select class="form-select">
+                            <option>Instrument Calibration</option>
+                            <option>Loop Checking</option>
+                            <option>Pre-Commissioning</option>
+                            <option>Commissioning</option>
+                            <option>FAT (Factory Acceptance Test)</option>
+                            <option>SAT (Site Acceptance Test)</option>
+                            <option>Functional Testing</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Equipment Type</label>
+                        <select class="form-select">
+                            <option>Pressure Transmitter</option>
+                            <option>Temperature Transmitter</option>
+                            <option>Flow Transmitter</option>
+                            <option>Control Valve</option>
+                            <option>Safety Valve</option>
+                            <option>DCS/PLC System</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Test Equipment Required</label>
+                        <textarea class="form-textarea" placeholder="List calibrators, tools, references..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Acceptance Criteria</label>
+                        <textarea class="form-textarea" placeholder="Pass/fail criteria and tolerances..."></textarea>
+                    </div>
+                    <button class="btn btn-primary">📖 Generate Procedure</button>
+                `
+            },
+            estimate: {
+                title: 'Cost Estimation',
+                subtitle: 'Instrumentation & control budget',
+                content: `
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">$0</div>
+                            <div class="stat-label">Material Cost</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">$0</div>
+                            <div class="stat-label">Labor Cost</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Estimate Class</label>
+                        <select class="form-select">
+                            <option>Class 5 - Conceptual (-50% / +100%)</option>
+                            <option>Class 4 - Study/Feasibility (-30% / +50%)</option>
+                            <option>Class 3 - Budget/Authorization (-20% / +30%)</option>
+                            <option>Class 2 - Control (-15% / +20%)</option>
+                            <option>Class 1 - Definitive (-10% / +15%)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Instrument Count</label>
+                        <input class="form-input" type="number" placeholder="Total instruments">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Control System I/O Points</label>
+                        <input class="form-input" type="number" placeholder="DCS/PLC points">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Cable Length (meters)</label>
+                        <input class="form-input" type="number" placeholder="Total cable">
+                    </div>
+                    <button class="btn btn-primary">💵 Calculate Estimate</button>
+                `
+            }
+        };
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.module-card');
+            
+            cards.forEach(card => {
+                const title = card.querySelector('.module-title').textContent.toLowerCase();
+                const desc = card.querySelector('.module-desc').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || desc.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Category filtering
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                const category = this.getAttribute('data-category');
+                const cards = document.querySelectorAll('.module-card');
+                
+                cards.forEach(card => {
+                    if (category === 'all' || card.getAttribute('data-category') === category) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Modal functions
+        function openModule(moduleId) {
+            const template = moduleTemplates[moduleId];
+            if (!template) {
+                alert('Module under development');
+                return;
+            }
+            
+            document.getElementById('modalTitle').textContent = template.title;
+            document.getElementById('modalSubtitle').textContent = template.subtitle;
+            document.getElementById('modalBody').innerHTML = template.content;
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Click outside to close
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Calculation form updater
+        function updateCalcForm() {
+            const calcType = document.getElementById('calcType').value;
+            const calcInputs = document.getElementById('calcInputs');
+            
+            let formHTML = '';
+            
+            if (calcType === 'Control Valve Sizing (IEC 60534)') {
+                formHTML = `
+                    <div class="form-group">
+                        <label class="form-label">Flow Rate (m³/h)</label>
+                        <input class="form-input" type="number" id="flowRate" value="100">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Inlet Pressure (bar)</label>
+                        <input class="form-input" type="number" id="p1" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Outlet Pressure (bar)</label>
+                        <input class="form-input" type="number" id="p2" value="5">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fluid Density (kg/m³)</label>
+                        <input class="form-input" type="number" id="density" value="1000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Viscosity (cP)</label>
+                        <input class="form-input" type="number" id="viscosity" value="1">
+                    </div>
+                `;
+            } else if (calcType === 'Orifice Plate Sizing (ISO 5167)') {
+                formHTML = `
+                    <div class="form-group">
+                        <label class="form-label">Flow Rate (m³/h)</label>
+                        <input class="form-input" type="number" id="flowRate" value="100">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Pipe Diameter (mm)</label>
+                        <input class="form-input" type="number" id="pipeDia" value="100">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fluid Density (kg/m³)</label>
+                        <input class="form-input" type="number" id="density" value="1000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Dynamic Viscosity (Pa·s)</label>
+                        <input class="form-input" type="number" id="viscosity" value="0.001" step="0.0001">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Desired Pressure Drop (bar)</label>
+                        <input class="form-input" type="number" id="deltaPDesired" value="0.5">
+                    </div>
+                `;
+            } else if (calcType === 'Transmitter Range Setting') {
+                formHTML = `
+                    <div class="form-group">
+                        <label class="form-label">Transmitter Type</label>
+                        <select class="form-select" id="transmitterType">
+                            <option>Pressure</option>
+                            <option>Differential Pressure</option>
+                            <option>Level</option>
+                            <option>Flow</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Process Min Value</label>
+                        <input class="form-input" type="number" id="processMin" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Process Max Value</label>
+                        <input class="form-input" type="number" id="processMax" value="100">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Normal Operating Value</label>
+                        <input class="form-input" type="number" id="processNormal" value="50">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Safety Margin (%)</label>
+                        <input class="form-input" type="number" id="safetyMargin" value="10">
+                    </div>
+                `;
+            } else if (calcType === 'Impulse Line Sizing') {
+                formHTML = `
+                    <div class="form-group">
+                        <label class="form-label">Process Fluid</label>
+                        <select class="form-select" id="processFluid">
+                            <option>Water</option>
+                            <option>Steam</option>
+                            <option>Gas</option>
+                            <option>Oil</option>
+                            <option>Condensate</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Line Length (m)</label>
+                        <input class="form-input" type="number" id="lineLength" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Operating Temperature (°C)</label>
+                        <input class="form-input" type="number" id="temperature" value="100">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Operating Pressure (bar)</label>
+                        <input class="form-input" type="number" id="pressure" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Viscosity (cP)</label>
+                        <input class="form-input" type="number" id="viscosity" value="1">
+                    </div>
+                `;
+            } else if (calcType === 'Relief Valve I&C Interface') {
+                formHTML = `
+                    <div class="form-group">
+                        <label class="form-label">Set Pressure (bar)</label>
+                        <input class="form-input" type="number" id="setPressure" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Overpressure (%)</label>
+                        <input class="form-input" type="number" id="overpressure" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Alarm Setpoint (% of set pressure)</label>
+                        <input class="form-input" type="number" id="alarmSetpoint" value="90">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">High Alarm (%)</label>
+                        <input class="form-input" type="number" id="highAlarm" value="95">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Trip Setpoint (%)</label>
+                        <input class="form-input" type="number" id="tripSetpoint" value="98">
+                    </div>
+                `;
+            }
+            
+            calcInputs.innerHTML = formHTML;
+        }
+
+        // Sample calculation function
+        function performCalculation() {
+            const calcType = document.getElementById('calcType').value;
+            let output = '';
+            
+            if (calcType === 'Control Valve Sizing (IEC 60534)') {
+                const flowRate = parseFloat(document.getElementById('flowRate').value);
+                const p1 = parseFloat(document.getElementById('p1').value);
+                const p2 = parseFloat(document.getElementById('p2').value);
+                const density = parseFloat(document.getElementById('density').value);
+                const viscosity = parseFloat(document.getElementById('viscosity').value);
+                
+                // Control valve Cv calculation
+                const deltaP = p1 - p2;
+                const sg = density / 1000;
+                const cv = flowRate / (0.865 * Math.sqrt(deltaP / sg));
+                
+                // Reynolds number check
+                const velocity = flowRate / (3.14159 * Math.pow(0.05, 2) * 3600); // Assuming DN50
+                const Re = (density * velocity * 0.05) / (viscosity / 1000);
+                
+                output = `
+                    <div class="output-section">
+                        <div class="output-title">CONTROL VALVE SIZING - IEC 60534-2-1</div>
+                        <div class="output-result">
+                            <strong>Given Parameters:</strong><br>
+                            Flow Rate (Q): ${flowRate} m³/h<br>
+                            Inlet Pressure (P1): ${p1} bar<br>
+                            Outlet Pressure (P2): ${p2} bar<br>
+                            Density (ρ): ${density} kg/m³<br>
+                            Viscosity (μ): ${viscosity} cP<br><br>
+                            
+                            <strong>Intermediate Calculations:</strong><br>
+                            Pressure Drop (ΔP): ${deltaP.toFixed(2)} bar<br>
+                            Specific Gravity (SG): ${sg.toFixed(3)}<br>
+                            Reynolds Number (Re): ${Re.toFixed(0)}<br>
+                            Flow Regime: ${Re > 4000 ? 'Turbulent' : Re > 2300 ? 'Transitional' : 'Laminar'}<br><br>
+                            
+                            <strong>Results:</strong><br>
+                            <strong>Required Cv: ${cv.toFixed(2)}</strong><br>
+                            With 10% margin: Cv ≥ ${(cv * 1.1).toFixed(2)}<br>
+                            With 20% margin: Cv ≥ ${(cv * 1.2).toFixed(2)}<br><br>
+                            
+                            <strong>Recommended Valve Size:</strong><br>
+                            Nominal Size: ${cv < 10 ? 'DN25 (1")' : cv < 30 ? 'DN50 (2")' : cv < 70 ? 'DN80 (3")' : cv < 130 ? 'DN100 (4")' : 'DN150 (6")'}<br>
+                            Typical Cv Range: ${cv < 10 ? '2-12' : cv < 30 ? '12-36' : cv < 70 ? '36-84' : cv < 130 ? '84-156' : '156-312'}<br><br>
+                            
+                            <strong>Notes:</strong><br>
+                            - Use manufacturer's Cv tables for final selection<br>
+                            - Consider cavitation if ΔP/P1 > 0.5<br>
+                            - Verify viscosity correction if Re < 10,000
+                        </div>
+                    </div>
+                `;
+            } else if (calcType === 'Orifice Plate Sizing (ISO 5167)') {
+                const flowRate = parseFloat(document.getElementById('flowRate').value);
+                const pipeDia = parseFloat(document.getElementById('pipeDia').value);
+                const density = parseFloat(document.getElementById('density').value);
+                const viscosity = parseFloat(document.getElementById('viscosity').value);
+                const deltaPDesired = parseFloat(document.getElementById('deltaPDesired').value);
+                
+                // Convert to SI units
+                const D = pipeDia / 1000; // m
+                const Q = flowRate / 3600; // m³/s
+                const deltaP = deltaPDesired * 100000; // Pa
+                
+                // Iterative beta calculation (simplified)
+                let beta = 0.5; // Initial guess
+                for (let i = 0; i < 10; i++) {
+                    const A2 = Math.PI * Math.pow(D * beta / 2, 2);
+                    const C = 0.5961 + 0.0261 * beta * beta; // Simplified discharge coefficient
+                    const epsilon = 1; // Incompressible flow
+                    const Qcalc = C * epsilon * A2 * Math.sqrt(2 * deltaP / (density * (1 - Math.pow(beta, 4))));
+                    
+                    if (Math.abs(Qcalc - Q) < 0.0001) break;
+                    
+                    beta = beta * Math.pow(Q / Qcalc, 0.2);
+                }
+                
+                const d = beta * D * 1000; // Orifice diameter in mm
+                
+                output = `
+                    <div class="output-section">
+                        <div class="output-title">ORIFICE PLATE SIZING - ISO 5167</div>
+                        <div class="output-result">
+                            <strong>Given Parameters:</strong><br>
+                            Flow Rate (Q): ${flowRate} m³/h<br>
+                            Pipe Diameter (D): ${pipeDia} mm<br>
+                            Fluid Density (ρ): ${density} kg/m³<br>
+                            Dynamic Viscosity (μ): ${viscosity} Pa·s<br>
+                            Desired ΔP: ${deltaPDesired} bar<br><br>
+                            
+                            <strong>Results:</strong><br>
+                            <strong>Beta Ratio (β): ${beta.toFixed(4)}</strong><br>
+                            <strong>Orifice Diameter (d): ${d.toFixed(2)} mm</strong><br>
+                            Discharge Coefficient (C): ${(0.5961 + 0.0261 * beta * beta).toFixed(4)}<br><br>
+                            
+                            <strong>Validity Checks:</strong><br>
+                            Beta ratio range: ${beta >= 0.2 && beta <= 0.75 ? '✓ Valid (0.2-0.75)' : '✗ Out of range'}<br>
+                            Recommended β: 0.4 - 0.7 for best accuracy<br><br>
+                            
+                            <strong>Standard Bore Sizes:</strong><br>
+                            ${d < 20 ? '12.5 mm' : d < 30 ? '25 mm' : d < 45 ? '40 mm' : d < 70 ? '63 mm' : '80 mm'}<br><br>
+                            
+                            <strong>Notes:</strong><br>
+                            - Use corner or flange taps as per ISO 5167<br>
+                            - Ensure 10D upstream / 5D downstream straight pipe<br>
+                            - Permanent pressure loss ≈ ${(deltaPDesired * (1 - beta * beta)).toFixed(3)} bar
+                        </div>
+                    </div>
+                `;
+            } else if (calcType === 'Transmitter Range Setting') {
+                const processMin = parseFloat(document.getElementById('processMin').value);
+                const processMax = parseFloat(document.getElementById('processMax').value);
+                const processNormal = parseFloat(document.getElementById('processNormal').value);
+                const safetyMargin = parseFloat(document.getElementById('safetyMargin').value) / 100;
+                
+                const span = processMax - processMin;
+                const lowerRange = processMin - (span * safetyMargin);
+                const upperRange = processMax + (span * safetyMargin);
+                const calibratedSpan = upperRange - lowerRange;
+                
+                // Calculate alarm points
+                const normalPercent = ((processNormal - lowerRange) / calibratedSpan) * 100;
+                const lowAlarm = lowerRange + (calibratedSpan * 0.15);
+                const highAlarm = lowerRange + (calibratedSpan * 0.85);
+                
+                output = `
+                    <div class="output-section">
+                        <div class="output-title">TRANSMITTER RANGE SETTING</div>
+                        <div class="output-result">
+                            <strong>Process Data:</strong><br>
+                            Minimum Process Value: ${processMin}<br>
+                            Maximum Process Value: ${processMax}<br>
+                            Normal Operating Point: ${processNormal}<br>
+                            Process Span: ${span.toFixed(2)}<br><br>
+                            
+                            <strong>Recommended Calibration Range:</strong><br>
+                            <strong>Lower Range Value (LRV): ${lowerRange.toFixed(2)}</strong><br>
+                            <strong>Upper Range Value (URV): ${upperRange.toFixed(2)}</strong><br>
+                            <strong>Calibrated Span: ${calibratedSpan.toFixed(2)}</strong><br>
+                            Safety Margin: ${(safetyMargin * 100).toFixed(0)}%<br><br>
+                            
+                            <strong>Output Signal Mapping:</strong><br>
+                            At LRV (${lowerRange.toFixed(2)}): 4 mA / 0%<br>
+                            At Normal (${processNormal}): ${(4 + 16 * normalPercent / 100).toFixed(2)} mA / ${normalPercent.toFixed(1)}%<br>
+                            At URV (${upperRange.toFixed(2)}): 20 mA / 100%<br><br>
+                            
+                            <strong>Suggested Alarm Setpoints:</strong><br>
+                            Low Alarm (LAL): ${lowAlarm.toFixed(2)} (15% of span)<br>
+                            High Alarm (HAH): ${highAlarm.toFixed(2)} (85% of span)<br><br>
+                            
+                            <strong>Notes:</strong><br>
+                            - Verify transmitter turn-down ratio<br>
+                            - Consider static pressure rating<br>
+                            - Document zero and span adjustments<br>
+                            - Perform 5-point calibration check
+                        </div>
+                    </div>
+                `;
+            } else if (calcType === 'Impulse Line Sizing') {
+                const lineLength = parseFloat(document.getElementById('lineLength').value);
+                const temperature = parseFloat(document.getElementById('temperature').value);
+                const pressure = parseFloat(document.getElementById('pressure').value);
+                const viscosity = parseFloat(document.getElementById('viscosity').value);
+                const processFluid = document.getElementById('processFluid').value;
+                
+                // Recommended sizes based on service
+                let recommendedSize = '1/2"';
+                let minSize = '3/8"';
+                let maxLength = 15;
+                
+                if (processFluid === 'Steam') {
+                    recommendedSize = '3/4"';
+                    minSize = '1/2"';
+                    maxLength = 10;
+                } else if (processFluid === 'Gas') {
+                    recommendedSize = '1/2"';
+                    minSize = '1/2"';
+                    maxLength = 20;
+                } else if (viscosity > 10) {
+                    recommendedSize = '3/4"';
+                    minSize = '1/2"';
+                    maxLength = 8;
+                }
+                
+                const slopeReq = lineLength > 5 ? 'Yes (1:12 minimum)' : 'Recommended';
+                const drainReq = temperature > 80 || processFluid === 'Steam' ? 'Required' : 'Optional';
+                const heatTrace = temperature > 100 || processFluid === 'Steam' ? 'Required' : 'Not required';
+                
+                output = `
+                    <div class="output-section">
+                        <div class="output-title">IMPULSE LINE SIZING & DESIGN</div>
+                        <div class="output-result">
+                            <strong>Service Conditions:</strong><br>
+                            Process Fluid: ${processFluid}<br>
+                            Line Length: ${lineLength} m<br>
+                            Temperature: ${temperature} °C<br>
+                            Pressure: ${pressure} bar<br>
+                            Viscosity: ${viscosity} cP<br><br>
+                            
+                            <strong>Recommended Design:</strong><br>
+                            <strong>Tubing Size: ${recommendedSize} (${minSize} minimum)</strong><br>
+                            Material: SS316 seamless<br>
+                            Maximum Length: ${maxLength} m (${lineLength > maxLength ? '⚠️ EXCEEDS LIMIT' : '✓ OK'})<br><br>
+                            
+                            <strong>Installation Requirements:</strong><br>
+                            Slope Required: ${slopeReq}<br>
+                            Drain/Vent Points: ${drainReq}<br>
+                            Heat Tracing: ${heatTrace}<br>
+                            Insulation: ${temperature > 60 ? 'Required' : 'Optional'}<br>
+                            Condensate Pots: ${processFluid === 'Steam' ? 'Required' : 'N/A'}<br>
+                            Purge Connection: Recommended<br><br>
+                            
+                            <strong>Response Time Estimate:</strong><br>
+                            Approximate lag: ${(lineLength * 2).toFixed(1)} seconds<br>
+                            ${lineLength > 10 ? '⚠️ Consider remote seal or capillary system' : ''}<br><br>
+                            
+                            <strong>Notes:</strong><br>
+                            - Use block and bleed valves<br>
+                            - Install close to process connection<br>
+                            - Avoid liquid pockets in gas service<br>
+                            - Support every 1-2 meters
+                        </div>
+                    </div>
+                `;
+            } else if (calcType === 'Relief Valve I&C Interface') {
+                const setPressure = parseFloat(document.getElementById('setPressure').value);
+                const overpressure = parseFloat(document.getElementById('overpressure').value) / 100;
+                const alarmSetpoint = parseFloat(document.getElementById('alarmSetpoint').value) / 100;
+                const highAlarm = parseFloat(document.getElementById('highAlarm').value) / 100;
+                const tripSetpoint = parseFloat(document.getElementById('tripSetpoint').value) / 100;
+                
+                const relievingPressure = setPressure * (1 + overpressure);
+                const alarmPressure = setPressure * alarmSetpoint;
+                const highAlarmPressure = setPressure * highAlarm;
+                const tripPressure = setPressure * tripSetpoint;
+                
+                output = `
+                    <div class="output-section">
+                        <div class="output-title">RELIEF VALVE I&C INTERFACE</div>
+                        <div class="output-result">
+                            <strong>Relief Valve Data:</strong><br>
+                            Set Pressure: ${setPressure} bar<br>
+                            Allowable Overpressure: ${(overpressure * 100).toFixed(0)}%<br>
+                            Relieving Pressure: ${relievingPressure.toFixed(2)} bar<br><br>
+                            
+                            <strong>Pressure Transmitter Configuration:</strong><br>
+                            Range: 0 - ${(setPressure * 1.2).toFixed(2)} bar<br>
+                            (120% of set pressure)<br><br>
+                            
+                            <strong>Alarm & Trip Setpoints:</strong><br>
+                            Low Alarm (PAL): ${(setPressure * 0.7).toFixed(2)} bar (70%)<br>
+                            <strong>Pre-Alarm (PAH): ${alarmPressure.toFixed(2)} bar (${(alarmSetpoint * 100).toFixed(0)}%)</strong><br>
+                            <strong>High Alarm (PAHH): ${highAlarmPressure.toFixed(2)} bar (${(highAlarm * 100).toFixed(0)}%)</strong><br>
+                            <strong>Trip Setpoint (PSHT): ${tripPressure.toFixed(2)} bar (${(tripSetpoint * 100).toFixed(0)}%)</strong><br>
+                            Relief Opens: ${setPressure} bar (100%)<br><br>
+                            
+                            <strong>Safety Margins:</strong><br>
+                            Trip to Set Pressure: ${(setPressure - tripPressure).toFixed(2)} bar<br>
+                            Margin %: ${((1 - tripSetpoint) * 100).toFixed(1)}%<br>
+                            ${tripSetpoint > 0.98 ? '⚠️ Trip setpoint too close to relief!' : '✓ Adequate margin'}<br><br>
+                            
+                            <strong>Recommended Actions:</strong><br>
+                            PAH (${(alarmSetpoint * 100).toFixed(0)}%): Operator notification<br>
+                            PAHH (${(highAlarm * 100).toFixed(0)}%): Immediate action required<br>
+                            PSHT (${(tripSetpoint * 100).toFixed(0)}%): Automatic shutdown/isolation<br><br>
+                            
+                            <strong>Documentation Required:</strong><br>
+                            - Cause & Effect for shutdown logic<br>
+                            - SIL assessment for trip function<br>
+                            - Alarm rationalization record<br>
+                            - Proof test procedures
+                        </div>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('calcOutput').innerHTML = output;
+            document.getElementById('calcOutput').style.display = 'block';
+        }
+
+        // Quick action functions
+        function openQuickCalc() {
+            openModule('calculations');
+        }
+
+        function openNewProject() {
+            alert('Project creation wizard - Coming soon!');
+        }
+
+        function openTemplates() {
+            alert('Template library - Coming soon!');
+        }
+
+        function openRecentDocs() {
+            alert('Recent documents - Coming soon!');
+        }
+
+        function generateDatasheet() {
+            alert('Datasheet PDF generated successfully!');
+        }
+
+        function exportPDF() {
+            alert('Exporting to PDF...');
+        }
+
+        // Swipe to close modal
+        let touchStartY = 0;
+        document.querySelector('.modal-content').addEventListener('touchstart', function(e) {
+            touchStartY = e.touches[0].clientY;
+        });
+
+        document.querySelector('.modal-content').addEventListener('touchmove', function(e) {
+            const touchY = e.touches[0].clientY;
+            const diff = touchY - touchStartY;
+            
+            if (diff > 100) {
+                closeModal();
+            }
+        });
+    </script>
+
+</body>
+</html>
